@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+httpx
+
+# Azure / AI-related (you'll hook these up later)
+openai           # for Azure OpenAI (same client, different endpoint)
+psycopg2-binary  # if you use Azure Database for PostgreSQL
+sqlalchemy       # optional, for DB modeling
