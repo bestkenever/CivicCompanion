@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\services\\utils.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:services\\utils.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\action_connect_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:agents\\action_connect_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_explain_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:agents\\policy_explain_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_search_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:agents\\policy_search_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\router_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:agents\\router_agent.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "action_connect_agent.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\action_connect_agent.py",
+              "RelativeDocumentMoniker": "agents\\action_connect_agent.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\action_connect_agent.py",
+              "RelativeToolTip": "agents\\action_connect_agent.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T18:28:48.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "policy_explain_agent.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_explain_agent.py",
+              "RelativeDocumentMoniker": "agents\\policy_explain_agent.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_explain_agent.py",
+              "RelativeToolTip": "agents\\policy_explain_agent.py",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAACDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T18:26:09.973Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "policy_search_agent.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_search_agent.py",
+              "RelativeDocumentMoniker": "agents\\policy_search_agent.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\policy_search_agent.py",
+              "RelativeToolTip": "agents\\policy_search_agent.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T18:23:02.964Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\main.py",
+              "RelativeDocumentMoniker": "main.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\main.py",
+              "RelativeToolTip": "main.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T13:42:00.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "router_agent.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\router_agent.py",
+              "RelativeDocumentMoniker": "agents\\router_agent.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\agents\\router_agent.py",
+              "RelativeToolTip": "agents\\router_agent.py",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T13:39:29.661Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "utils.py",
+              "DocumentMoniker": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\services\\utils.py",
+              "RelativeDocumentMoniker": "services\\utils.py",
+              "ToolTip": "C:\\Users\\limin\\AIEngineering\\CivicCompany\\services\\utils.py",
+              "RelativeToolTip": "services\\utils.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-11-20T13:36:47.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
