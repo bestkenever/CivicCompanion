@@ -1,5 +1,8 @@
 // src/screens/StoriesScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App";
 import {
   View,
   Text,
@@ -7,6 +10,7 @@ import {
   SafeAreaView,
   FlatList,
   RefreshControl,
+  Animated,
 } from "react-native";
 import { fetchStories } from "../api/client";
 import { Story } from "../types";
@@ -17,6 +21,26 @@ const StoriesScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const blinkAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blinkAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [blinkAnim]);
 
   const loadStories = async () => {
     try {
@@ -39,7 +63,10 @@ const StoriesScreen: React.FC = () => {
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
         <Text style={styles.appName}>CivicCompanion</Text>
-        <Text style={styles.sectionTitle}>Today</Text>
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Today</Text>
+          <Animated.View style={[styles.liveDot, { opacity: blinkAnim }]} />
+        </View>
       </View>
 
       {error && (
@@ -69,9 +96,13 @@ const StoriesScreen: React.FC = () => {
         renderItem={({ item }) => (
           <StoryCard
             story={item}
-            onPress={() => {
-              // later: navigate to detail screen if you want
-            }}
+            onPress={() =>
+              navigation.navigate("StoryDetail", {
+                storyId: item.id,
+                storyTitle: item.title,
+                imageUrl: item.image_url ?? null,
+              })
+            }
           />
         )}
       />
@@ -114,6 +145,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 24,
     color: "#666",
+  },
+  sectionRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginTop: 4,
+  },
+  liveDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 14,
+    backgroundColor: "#e63946",
+    marginLeft: 6,
+    marginTop: 5,
   },
 });
 

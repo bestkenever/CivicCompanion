@@ -1,9 +1,15 @@
 // src/api/client.ts
-import { Story, ExplainPolicyResponse, TakeActionResponse } from "../types";
+import {
+  Story,
+  StoryDetail,
+  ExplainPolicyResponse,
+  TakeActionResponse,
+} from "../types";
 
 const API_BASE_URL =
   // process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
   "https://civiccompanion-backend-eqfgdybbdsawbzcx.canadacentral-01.azurewebsites.net";
+  //"http://192.168.1.27:8000"
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -16,6 +22,11 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export async function fetchStories(): Promise<Story[]> {
   const res = await fetch(`${API_BASE_URL}/stories`);
   return handleResponse<Story[]>(res);
+}
+
+export async function fetchStoryDetail(storyId: string): Promise<StoryDetail> {
+  const res = await fetch(`${API_BASE_URL}/stories/${storyId}`);
+  return handleResponse<StoryDetail>(res);
 }
 
 export async function explainPolicy(params: {

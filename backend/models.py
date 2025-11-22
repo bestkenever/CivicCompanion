@@ -8,6 +8,11 @@ class Story(BaseModel):
     summary: str
     policy_id: str
     tags: List[str]
+    image_url: Optional[str] = None
+
+
+class StoryDetail(Story):
+    detailed_summary: str
 
 
 class ExplainPolicyRequest(BaseModel):
