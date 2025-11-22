@@ -2,7 +2,8 @@
 import { Story, ExplainPolicyResponse, TakeActionResponse } from "../types";
 
 const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+  // process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+  "https://civiccompanion-backend-eqfgdybbdsawbzcx.canadacentral-01.azurewebsites.net";
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {

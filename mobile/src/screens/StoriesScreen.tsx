@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   appName: {
-    fontSize: 28,
-    fontWeight: "800",
+    fontSize: 35,
+    fontWeight: "900",
     color: "#111",
   },
   sectionTitle: {
     marginTop: 4,
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 25,
+    fontWeight: "800",
     color: "#e63946",
   },
   listContent: {

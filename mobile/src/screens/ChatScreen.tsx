@@ -190,14 +190,16 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 30,
+    fontWeight: "800",
     color: "#111",
+    textAlign: "center",
   },
   subtitle: {
     marginTop: 4,
     fontSize: 13,
     color: "#555",
+    textAlign: "center",
   },
   policySelector: {
     paddingHorizontal: 16,
