@@ -8,17 +8,20 @@ def run_system(user_input, user_profile):
     intent = classify_intent(user_input)
     print(f"INTENT: {intent}")
 
-    if intent == "POLICY_UPDATE":
+    if intent == "candidate_info":
         return fetch_policy_info(user_input)
 
-    elif intent == "POLICY_IMPACT_EXPLANATION":
+    elif intent == "POLICY_UPDATE":
+        return fetch_policy_info(user_input)
+
+    elif intent == "policy_explanation":
         policy = fetch_policy_info(user_input)
         return explain_policy(policy, user_profile)
 
-    elif intent == "FIND_SERVICES":
+    elif intent == "local_info_search":
         return suggest_actions(user_input, user_profile.get("location"))
 
-    elif intent == "SOCIAL_ACTION":
+    elif intent == "social_action":
         return suggest_actions(user_input, user_profile.get("location"))
 
     else:
