@@ -1,5 +1,5 @@
 // src/screens/ChatScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,9 +12,15 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import {
+  useRoute,
+  RouteProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { fetchStories, explainPolicy } from "../api/client";
 import { Story } from "../types";
 import PolicyChip from "../components/PolicyChip";
+import { RootTabParamList } from "../navigation/RootNavigator";
 
 type ChatMessage = {
   id: string;
@@ -28,6 +34,8 @@ const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const route = useRoute<RouteProp<RootTabParamList, "Chat">>();
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +50,18 @@ const ChatScreen: React.FC = () => {
       }
     })();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.focusInput) {
+        const timeout = setTimeout(() => {
+          inputRef.current?.focus();
+        }, 150);
+        return () => clearTimeout(timeout);
+      }
+      return undefined;
+    }, [route.params?.focusInput])
+  );
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -153,6 +173,7 @@ const ChatScreen: React.FC = () => {
 
         <View style={styles.inputRow}>
           <TextInput
+            ref={inputRef}
             style={styles.input}
             value={input}
             onChangeText={setInput}

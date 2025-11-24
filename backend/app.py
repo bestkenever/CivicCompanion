@@ -209,30 +209,28 @@ async def get_stories():
     return DUMMY_STORIES
 
 @app.get("/stories/{story_id}", response_model=StoryDetail)
-async def get_story_detail(story_id: str):
+async def get_story_detail(story_id: str, reading_level: str = "default"):
     story = next((s for s in DUMMY_STORIES if s["id"] == story_id), None)
     if not story:
         raise HTTPException(status_code=404, detail="Story not found.")
-    
-    if story.get("detailed_summary"):
-        return story
+
+    summary_key = "detailed_summary_simple" if reading_level == "simple" else "detailed_summary"
+    cached = story.get(summary_key)
+    if cached:
+        return {**story, "detailed_summary": cached}
 
     policy = DUMMY_POLICIES.get(story["policy_id"])
     policy_text = policy["text"] if policy else ""
 
-    # Call Azure OpenAI (see step 3)
     detailed_text = await call_story_expander(
         story_title=story["title"],
         story_summary=story["summary"],
         policy_text=policy_text,
+        reading_level=reading_level,
     )
 
-    story["detailed_summary"] = detailed_text
-
-    return {
-        **story,
-        "detailed_summary": detailed_text,
-    }
+    story[summary_key] = detailed_text
+    return {**story, "detailed_summary": detailed_text}
 
 
 @app.post("/explain-policy", response_model=ExplainPolicyResponse)

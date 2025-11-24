@@ -8,7 +8,7 @@ import ActionsScreen from "../screens/ActionsScreen";
 
 export type RootTabParamList = {
   Stories: undefined;
-  Chat: undefined;
+  Chat: { focusInput?: boolean } | undefined;
   Actions: undefined;
 };
 

@@ -70,7 +70,14 @@ async def call_story_expander(
     story_title: str,
     story_summary: str,
     policy_text: str,
+    reading_level: str = "default",
 ) -> str:
+    reading_hint = (
+        "Rephrase using simple words and short sentences so that a middle-school reader can understand."
+        if reading_level == "simple"
+        else "Write in concise, professional language for a general adult audience."
+    )
+
     user_prompt = f"""
 Write a 3-paragraph, neutral story for the CivicCompanion app. Do not include any title or header 
 just go straight into the story
@@ -87,6 +94,7 @@ Requirements:
 - Stay factual and accessible; avoid legal or political advice.
 - Mention why the story matters for everyday people or students.
 - Include any helpful context about what readers could look out for next.
+ - {reading_hint}
 """
 
     return _run_completion(

@@ -24,8 +24,14 @@ export async function fetchStories(): Promise<Story[]> {
   return handleResponse<Story[]>(res);
 }
 
-export async function fetchStoryDetail(storyId: string): Promise<StoryDetail> {
-  const res = await fetch(`${API_BASE_URL}/stories/${storyId}`);
+export async function fetchStoryDetail(
+  storyId: string,
+  opts?: { reading_level?: string }
+): Promise<StoryDetail> {
+  const query = opts?.reading_level
+    ? `?reading_level=${encodeURIComponent(opts.reading_level)}`
+    : "";
+  const res = await fetch(`${API_BASE_URL}/stories/${storyId}${query}`);
   return handleResponse<StoryDetail>(res);
 }
 

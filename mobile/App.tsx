@@ -1,11 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RootNavigator from "./src/navigation/RootNavigator";
 import StoryDetail from "./src/screens/StoryDetail";
 import { TouchableOpacity, Text } from "react-native";
+import { RootTabParamList } from "./src/navigation/RootNavigator";
 
 export type RootStackParamList = {
-  Tabs: undefined;
+  Tabs: NavigatorScreenParams<RootTabParamList>;
   StoryDetail: { storyId: string; storyTitle: string; imageUrl?: string | null };
 };
 
