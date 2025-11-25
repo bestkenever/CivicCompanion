@@ -1,5 +1,5 @@
 // src/screens/ChatScreen.tsx
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import {
   useRoute,
   RouteProp,
   useFocusEffect,
 } from "@react-navigation/native";
-import { fetchStories, explainPolicy } from "../api/client";
-import { Story } from "../types";
+import { fetchStories, sendChat } from "../api/client";
+import { Story, Source as SourceType } from "../types";
 import PolicyChip from "../components/PolicyChip";
 import { RootTabParamList } from "../navigation/RootNavigator";
 
@@ -26,6 +27,17 @@ type ChatMessage = {
   id: string;
   from: "user" | "bot";
   text: string;
+  intent?: string;
+  sources?: SourceType[];
+  toolsUsed?: string[];
+  error?: boolean;
+};
+
+const intentLabels: Record<string, string> = {
+  candidate_explanation: "Candidate explanation",
+  policy_explanation: "Policy explanation",
+  action: "Action",
+  other: "Other",
 };
 
 const ChatScreen: React.FC = () => {
@@ -34,6 +46,7 @@ const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const route = useRoute<RouteProp<RootTabParamList, "Chat">>();
   const inputRef = useRef<TextInput>(null);
 
@@ -65,29 +78,34 @@ const ChatScreen: React.FC = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    if (!selectedPolicyId) return;
+    const userText = input.trim();
+    const nextConversationId =
+      conversationId ?? `local-${Date.now().toString()}`;
 
     const userMessage: ChatMessage = {
       id: `u-${Date.now()}`,
       from: "user",
-      text: input.trim(),
+      text: userText,
     };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
     setSending(true);
     try {
-      const res = await explainPolicy({
-        policy_id: selectedPolicyId,
-        user_role: "student",
-        language: "en",
+      const res = await sendChat({
+        message: userText,
+        conversation_id: nextConversationId,
+        metadata: selectedPolicyId ? { policy_id: selectedPolicyId } : {},
       });
 
-      const botText = `${res.what_it_is}\n\n${res.what_it_means_for_you}\n\n${res.disclaimer}`;
+      setConversationId(res.conversation_id ?? nextConversationId);
       const botMessage: ChatMessage = {
         id: `b-${Date.now()}`,
         from: "bot",
-        text: botText,
+        text: res.answer,
+        intent: res.intent,
+        sources: res.sources,
+        toolsUsed: res.tools_used,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (err: any) {
@@ -95,7 +113,8 @@ const ChatScreen: React.FC = () => {
         id: `b-${Date.now()}`,
         from: "bot",
         text:
-          "Sorry, I couldn’t explain that policy right now. Please try again in a moment.",
+          "Sorry, I couldn’t answer that right now. Please try again in a moment.",
+        error: true,
       };
       setMessages((prev) => [...prev, botError]);
     } finally {
@@ -106,6 +125,14 @@ const ChatScreen: React.FC = () => {
   const selectedStory = stories.find(
     (s) => s.policy_id === selectedPolicyId
   ) ?? null;
+  const policyOptions = useMemo(() => {
+    const seen = new Set<string>();
+    return stories.filter((story) => {
+      if (seen.has(story.policy_id)) return false;
+      seen.add(story.policy_id);
+      return true;
+    });
+  }, [stories]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -116,19 +143,19 @@ const ChatScreen: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>Ask CivicCompanion</Text>
           <Text style={styles.subtitle}>
-            Get neutral, plain-language explanations of policies.
+            Explanations for candidates, policies, or next steps.
           </Text>
         </View>
 
         {stories.length > 0 && (
           <View style={styles.policySelector}>
-            <Text style={styles.selectorLabel}>Topic</Text>
+            <Text style={styles.selectorLabel}>Optional topic</Text>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.chipRow}
             >
-              {stories.map((story) => (
+              {policyOptions.map((story) => (
                 <PolicyChip
                   key={story.id}
                   story={story}
@@ -160,13 +187,41 @@ const ChatScreen: React.FC = () => {
                 item.from === "user" ? styles.userBubble : styles.botBubble,
               ]}
             >
+              {item.from === "bot" && item.intent && (
+                <Text style={styles.intentTag}>
+                  {intentLabels[item.intent] ?? item.intent}
+                </Text>
+              )}
               <Text
-                style={
-                  item.from === "user" ? styles.userText : styles.botText
-                }
+                style={[
+                  item.from === "user" ? styles.userText : styles.botText,
+                  item.error && { color: "#b00020" },
+                ]}
               >
                 {item.text}
               </Text>
+
+              {item.sources && item.sources.length > 0 && (
+                <View style={styles.sourceCard}>
+                  <Text style={styles.sourceTitle}>Sources</Text>
+                  {item.sources.map((src, idx) => (
+                    <View key={`${src.title}-${idx}`} style={styles.sourceRow}>
+                      <Text style={styles.sourceName}>{src.title}</Text>
+                      <Text style={styles.sourceSnippet}>{src.snippet}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {item.toolsUsed && item.toolsUsed.length > 0 && (
+                <View style={styles.toolRow}>
+                  {item.toolsUsed.map((tool) => (
+                    <View key={tool} style={styles.toolChip}>
+                      <Text style={styles.toolText}>{tool}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
           )}
         />
@@ -180,7 +235,7 @@ const ChatScreen: React.FC = () => {
             placeholder={
               selectedStory
                 ? `Ask about "${selectedStory.title}"...`
-                : "Ask about a policy..."
+                : "Ask about a candidate, policy, or next steps..."
             }
             multiline
           />
@@ -189,7 +244,11 @@ const ChatScreen: React.FC = () => {
             onPress={sendMessage}
             disabled={sending}
           >
-            <Text style={styles.sendText}>{sending ? "..." : "Send"}</Text>
+            {sending ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.sendText}>Send</Text>
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -244,11 +303,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bubble: {
-    maxWidth: "80%",
+    maxWidth: "85%",
     borderRadius: 18,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 8,
+    paddingVertical: 10,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
   },
   userBubble: {
     alignSelf: "flex-end",
@@ -263,6 +326,59 @@ const styles = StyleSheet.create({
   },
   botText: {
     color: "#111",
+  },
+  intentTag: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    backgroundColor: "#eef2ff",
+    color: "#3c3c64",
+    fontSize: 11,
+    marginBottom: 6,
+  },
+  sourceCard: {
+    marginTop: 8,
+    backgroundColor: "#f7f8fa",
+    borderRadius: 12,
+    padding: 10,
+  },
+  sourceTitle: {
+    fontWeight: "700",
+    fontSize: 12,
+    color: "#222",
+    marginBottom: 4,
+  },
+  sourceRow: {
+    marginBottom: 6,
+  },
+  sourceName: {
+    fontWeight: "600",
+    fontSize: 12,
+    color: "#333",
+  },
+  sourceSnippet: {
+    fontSize: 12,
+    color: "#555",
+    marginTop: 2,
+  },
+  toolRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 8,
+  },
+  toolChip: {
+    backgroundColor: "#e8eefc",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 4,
+  },
+  toolText: {
+    fontSize: 11,
+    color: "#2544b8",
+    fontWeight: "600",
   },
   inputRow: {
     flexDirection: "row",
@@ -286,7 +402,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     borderRadius: 16,
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 10,
     backgroundColor: "#e63946",
   },
   sendText: {

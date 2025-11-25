@@ -24,3 +24,18 @@ export interface TakeActionResponse {
   actions: string[];
   disclaimer: string;
 }
+
+export interface Source {
+  title: string;
+  snippet: string;
+  url?: string;
+}
+
+export interface ChatResponse {
+  intent: string;
+  answer: string;
+  sources: Source[];
+  tools_used: string[];
+  conversation_id?: string | null;
+  timestamp?: string;
+}

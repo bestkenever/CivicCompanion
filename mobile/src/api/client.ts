@@ -4,6 +4,7 @@ import {
   StoryDetail,
   ExplainPolicyResponse,
   TakeActionResponse,
+  ChatResponse,
 } from "../types";
 
 const API_BASE_URL =
@@ -67,4 +68,21 @@ export async function takeAction(params: {
     }),
   });
   return handleResponse<TakeActionResponse>(res);
+}
+
+export async function sendChat(params: {
+  message: string;
+  conversation_id?: string | null;
+  metadata?: Record<string, unknown>;
+}): Promise<ChatResponse> {
+  const res = await fetch(`${API_BASE_URL}/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: params.message,
+      conversation_id: params.conversation_id ?? null,
+      metadata: params.metadata ?? {},
+    }),
+  });
+  return handleResponse<ChatResponse>(res);
 }

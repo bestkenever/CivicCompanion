@@ -1,5 +1,5 @@
 // src/screens/ActionsScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   SafeAreaView,
   View,
@@ -56,6 +56,14 @@ const ActionsScreen: React.FC = () => {
   const selectedStory = stories.find(
     (s) => s.policy_id === selectedPolicyId
   ) ?? null;
+  const policyOptions = useMemo(() => {
+    const seen = new Set<string>();
+    return stories.filter((story) => {
+      if (seen.has(story.policy_id)) return false;
+      seen.add(story.policy_id);
+      return true;
+    });
+  }, [stories]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -76,7 +84,7 @@ const ActionsScreen: React.FC = () => {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.chipRow}
             >
-              {stories.map((story) => (
+              {policyOptions.map((story) => (
                 <PolicyChip
                   key={story.id}
                   story={story}

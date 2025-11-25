@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from typing import List
 from models import (
@@ -7,8 +8,12 @@ from models import (
     ExplainPolicyResponse,
     TakeActionRequest,
     TakeActionResponse,
+    ChatRequest,
+    ChatResponse,
+    Source,
 )
 from azure_client import call_policy_explainer, call_story_expander
+from chat_flow import run_chat
 
 app = FastAPI(
     title="CivicCompanion API",
@@ -292,3 +297,24 @@ async def take_action(req: TakeActionRequest):
             "Always verify details with official sources."
         ),
     )
+
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    """
+    Unified chat endpoint that routes to different tools based on detected intent.
+    """
+    if not req.message:
+        raise HTTPException(status_code=400, detail="Message is required.")
+
+    chat_result = await run_chat(req.message)
+    # Attach conversation id + timestamp so the client can thread messages.
+    response = ChatResponse(
+        intent=chat_result.intent,
+        answer=chat_result.answer,
+        sources=[Source(**s.dict()) if hasattr(s, "dict") else s for s in chat_result.sources],
+        tools_used=chat_result.tools_used,
+        conversation_id=req.conversation_id,
+        timestamp=datetime.utcnow(),
+    )
+    return response
