@@ -42,6 +42,14 @@ class TakeActionResponse(BaseModel):
     disclaimer: str
 
 
+class ShortVideo(BaseModel):
+    id: str
+    title: str
+    description: Optional[str] = None
+    video_url: str
+    thumbnail_url: Optional[str] = None
+
+
 class Source(BaseModel):
     title: str
     snippet: str

@@ -215,13 +215,14 @@ def _heuristic_intent(message: str, phrases: List[str]) -> str:
         "vote for",
         "ballot",
         "who is",
-        "what is",
-        "about",
         "mayor",
         "council",
         "senator",
         "representative",
         "governor",
+        "candidate's",
+        "platform",
+        "proposals",
     ]
     policy_keywords = [
         "policy",

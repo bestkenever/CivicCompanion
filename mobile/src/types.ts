@@ -25,6 +25,14 @@ export interface TakeActionResponse {
   disclaimer: string;
 }
 
+export interface ShortVideo {
+  id: string;
+  title: string;
+  description?: string;
+  video_url: string;
+  thumbnail_url?: string;
+}
+
 export interface Source {
   title: string;
   snippet: string;

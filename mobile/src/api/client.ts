@@ -5,9 +5,10 @@ import {
   ExplainPolicyResponse,
   TakeActionResponse,
   ChatResponse,
+  ShortVideo,
 } from "../types";
 
-const API_BASE_URL =
+export const API_BASE_URL =
   // process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
   "https://civiccompanion-backend-eqfgdybbdsawbzcx.canadacentral-01.azurewebsites.net";
   //"http://192.168.1.27:8000"
@@ -85,4 +86,9 @@ export async function sendChat(params: {
     }),
   });
   return handleResponse<ChatResponse>(res);
+}
+
+export async function fetchShorts(): Promise<ShortVideo[]> {
+  const res = await fetch(`${API_BASE_URL}/shorts`);
+  return handleResponse<ShortVideo[]>(res);
 }

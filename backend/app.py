@@ -1,6 +1,8 @@
+import os
 from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from typing import List
+from fastapi.staticfiles import StaticFiles
 from models import (
     Story,
     StoryDetail,
@@ -11,6 +13,7 @@ from models import (
     ChatRequest,
     ChatResponse,
     Source,
+    ShortVideo,
 )
 from azure_client import call_policy_explainer, call_story_expander
 from chat_flow import run_chat
@@ -199,6 +202,9 @@ DUMMY_STORIES = [
     },
 ]
 
+SHORTS_DIR = os.getenv("SHORTS_DIR", os.path.join(os.path.dirname(__file__), "shorts"))
+if os.path.isdir(SHORTS_DIR):
+    app.mount("/media/shorts", StaticFiles(directory=SHORTS_DIR), name="shorts")
 
 @app.get("/health")
 async def health_check():
@@ -318,3 +324,49 @@ async def chat(req: ChatRequest):
         timestamp=datetime.utcnow(),
     )
     return response
+
+
+@app.get("/shorts", response_model=List[ShortVideo])
+async def get_shorts():
+    """
+    Return a short-form video feed. If local files exist in SHORTS_DIR, serve them.
+    Otherwise, return placeholder remote videos.
+    """
+    videos: List[ShortVideo] = []
+
+    if os.path.isdir(SHORTS_DIR):
+        for fname in os.listdir(SHORTS_DIR):
+            if fname.lower().endswith((".mp4", ".mov")):
+                videos.append(
+                    ShortVideo(
+                        id=f"local-{fname}",
+                        title=os.path.splitext(fname)[0],
+                        description="Short explainer clip",
+                        video_url=f"/media/shorts/{fname}",
+                    )
+                )
+
+    if not videos:
+        # Placeholder remote clips; swap with your own.
+        videos = [
+            ShortVideo(
+                id="sample-1",
+                title="Housing explainer",
+                description="Why rent stabilization matters",
+                video_url="https://storage.googleapis.com/exoplayer-test-media-1/360/cone.mp4",
+            ),
+            ShortVideo(
+                id="sample-2",
+                title="Loan relief basics",
+                description="How forgiveness timelines work",
+                video_url="https://storage.googleapis.com/exoplayer-test-media-1/360/cone.mp4",
+            ),
+            ShortVideo(
+                id="sample-3",
+                title="Local elections",
+                description="What city council controls",
+                video_url="https://storage.googleapis.com/exoplayer-test-media-1/360/cone.mp4",
+            ),
+        ]
+
+    return videos
